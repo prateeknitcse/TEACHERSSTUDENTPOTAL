@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="center">
+
+  <div class="card slide-up">
+    <h2 id="roleTitle">Login</h2>
+
+    <select id="classSelect">
+      <option value="">Select Class</option>
+      <option>Class 9A</option>
+      <option>Class 9B</option>
+      <option>Class 10A</option>
+    </select>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button type="button" id="loginBtn" class="btn full">Login</button>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const role = params.get("role") || "student";
+
+  const roleTitle = document.getElementById("roleTitle");
+  const classSelect = document.getElementById("classSelect");
+  const loginBtn = document.getElementById("loginBtn");
+
+  // UI adjust for role
+  if (role === "admin") {
+    classSelect.style.display = "none";
+    roleTitle.innerText = "Admin Login";
+  } else {
+    roleTitle.innerText = "Student Login";
+  }
+
+  // LOGIN CLICK HANDLER
+  loginBtn.addEventListener("click", async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const selectedClass = classSelect.value;
+
+    if (!username || !password) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (role === "student" && !selectedClass) {
+      alert("Please select class");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.msg || "Login failed");
+        return;
+      }
+
+      // SAVE AUTH DATA
+      localStorage.setItem("token", data.token);
+
+      if (role === "student") {
+        localStorage.setItem("className", selectedClass);
+        window.location.href = "dashboard.html";
+      } else {
+        window.location.href = "admin.html";
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("Server not reachable");
+    }
+  });
+</script>
+
+</body>
+</html>

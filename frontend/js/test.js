@@ -1,0 +1,183 @@
+let questions = [];
+let current = 0;
+let selected = null;
+let answers = [];
+let testId = localStorage.getItem("testId");
+let endTime = null;
+let timerInterval = null;
+
+const qEl = document.getElementById("question");
+const optContainer = document.getElementById("options") || document.querySelector(".options");
+const qNo = document.getElementById("qNo");
+const totalQ = document.getElementById("totalQ");
+const timerEl = document.getElementById("timer");
+const nextBtn = document.getElementById("nextBtn");
+
+// 🔐 AUTH + FLOW PROTECTION
+if (!localStorage.getItem("token") || !testId) {
+  alert("Invalid test access");
+  window.location.href = "dashboard.html";
+}
+
+// 🔹 LOAD TEST BY testId (LIVE ONLY)
+async function loadTest() {
+  try {
+    const res = await fetch(`http://localhost:5000/api/tests/by-id/${testId}`, {
+      headers: {
+        "Authorization": localStorage.getItem("token")
+      }
+    });
+
+    if (!res.ok) {
+      alert("Test not available");
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    const data = await res.json();
+
+    // 🔒 Enforce live window
+    const now = new Date();
+    const start = new Date(data.startTime);
+    const end = new Date(data.endTime);
+
+    if (now < start) {
+      alert("Test has not started yet");
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    if (now > end) {
+      alert("Test has already ended");
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    // Init test
+    document.getElementById("testTitle").innerText = data.title;
+    questions = data.questions;
+    endTime = end;
+
+    qNo.innerText = 1;
+    totalQ.innerText = questions.length;
+
+    startTimer();
+    loadQuestion();
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load test");
+    window.location.href = "dashboard.html";
+  }
+}
+
+// 🔹 RENDER QUESTION
+function loadQuestion() {
+  const q = questions[current];
+  qNo.innerText = current + 1;
+  qEl.innerText = q.question;
+
+  optContainer.innerHTML = "";
+  selected = null;
+
+  q.options.forEach((opt, index) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerText = opt;
+
+    btn.onclick = () => {
+      document
+        .querySelectorAll(".option")
+        .forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selected = index;
+    };
+
+    optContainer.appendChild(btn);
+  });
+}
+
+// 🔹 NEXT / SUBMIT
+nextBtn.onclick = () => {
+  if (selected === null) {
+    alert("Please select an option");
+    return;
+  }
+
+  answers.push({
+    question: questions[current].question,
+    selected,
+    correct: questions[current].correct
+  });
+
+  current++;
+
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    submitTest();
+  }
+};
+
+// 🔹 SUBMIT TEST (ONE ATTEMPT ONLY)
+async function submitTest() {
+  clearInterval(timerInterval);
+
+  let score = 0;
+  answers.forEach(a => {
+    if (a.selected === a.correct) score++;
+  });
+
+  try {
+    const res = await fetch("http://localhost:5000/api/results/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.getItem("token")
+      },
+      body: JSON.stringify({
+        testId,
+        score,
+        answers
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.msg || "Submission failed");
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    // Clear active test
+    localStorage.removeItem("testId");
+
+    window.location.href = "result.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Submission error");
+    window.location.href = "dashboard.html";
+  }
+}
+
+// 🔹 TIMER (SYNCED WITH endTime)
+function startTimer() {
+  timerInterval = setInterval(() => {
+    const now = new Date();
+    const diff = Math.floor((endTime - now) / 1000);
+
+    if (diff <= 0) {
+      submitTest();
+      return;
+    }
+
+    const min = Math.floor(diff / 60);
+    const sec = diff % 60;
+    timerEl.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  }, 1000);
+}
+
+// 🚀 INIT
+loadTest();

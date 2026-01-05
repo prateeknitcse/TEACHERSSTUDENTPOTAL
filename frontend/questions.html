@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Questions</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <nav class="nav">
+    <span>Questions</span>
+    <span class="right">Back</span>
+  </nav>
+
+  <main class="container fade-in">
+
+    <!-- Ask Question -->
+    <section class="question-box">
+      <h3>Ask a Question</h3>
+
+      <textarea placeholder="Type your question clearly..."></textarea>
+
+      <button class="btn full">Submit Question</button>
+    </section>
+
+    <!-- Previous Questions -->
+    <section class="question-list">
+      <h3>Your Questions</h3>
+
+      <!-- Question Card -->
+      <div class="question-card">
+        <p class="q-text">
+          ❓ Can you explain question 3 from the test?
+        </p>
+
+        <div class="reply pending">
+          ⏳ Waiting for reply
+        </div>
+      </div>
+
+      <!-- Question Card with Reply -->
+      <div class="question-card">
+        <p class="q-text">
+          ❓ What is the difference between HTML and CSS?
+        </p>
+
+        <div class="reply answered">
+          ✅ HTML structures the page, CSS styles it.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
