@@ -2,7 +2,30 @@ const router = require("express").Router();
 const Test = require("../models/Test");
 const auth = require("../middleware/auth.middleware");
 
-// 🔴 STUDENT: get tests by status
+// 🧑‍🏫 ADMIN: CREATE TEST
+router.post("/create", auth, async (req, res) => {
+  try {
+    const { className, title, startTime, endTime, questions } = req.body;
+
+    if (!className || !title || !startTime || !endTime || !questions) {
+      return res.status(400).json({ msg: "All fields are required" });
+    }
+
+    const test = await Test.create({
+      className,
+      title,
+      startTime,
+      endTime,
+      questions
+    });
+
+    res.json(test);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 🧑‍🎓 STUDENT: GET TESTS BY STATUS
 router.get("/student/my-tests", auth, async (req, res) => {
   try {
     const className = req.user.className;
@@ -26,7 +49,7 @@ router.get("/student/my-tests", auth, async (req, res) => {
   }
 });
 
-// 🔴 STUDENT: load test by id (LIVE ONLY)
+// 🧑‍🎓 STUDENT: LOAD TEST BY ID
 router.get("/by-id/:id", auth, async (req, res) => {
   try {
     const test = await Test.findById(req.params.id);
