@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin – Create Test</title>
+  <title>Admin Panel</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -29,11 +29,16 @@
     <label>Test Title</label>
     <input id="title" placeholder="e.g. HTML Basics Test"/>
 
-    <label>Start Time</label>
-    <input type="datetime-local" id="startTime"/>
-
-    <label>End Time</label>
-    <input type="datetime-local" id="endTime"/>
+    <div class="grid">
+      <div>
+        <label>Start Time</label>
+        <input type="datetime-local" id="startTime"/>
+      </div>
+      <div>
+        <label>End Time</label>
+        <input type="datetime-local" id="endTime"/>
+      </div>
+    </div>
   </div>
 
   <!-- Questions -->
@@ -44,18 +49,17 @@
     <button class="btn outline" id="addQuestionBtn">+ Add Question</button>
   </section>
 
-  <br/>
   <button class="btn full" id="createTestBtn">Create Test</button>
 
-</main>
-<section>
-  <h2>📊 Test Analytics</h2>
-  <div id="analytics"></div>
-</section>
+  <!-- Analytics -->
+  <section>
+    <h2>📊 Test Analytics</h2>
+    <div id="analytics"></div>
+  </section>
 
+</main>
 
 <script src="js/admin.js"></script>
 <script src="js/admin-analytics.js"></script>
-
 </body>
 </html>
