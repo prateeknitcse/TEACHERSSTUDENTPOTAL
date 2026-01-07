@@ -315,6 +315,11 @@ input, select {
 #analytics .card {
   margin-top: 15px;
 }
+#students .card {
+  display: grid;
+  gap: 10px;
+}
+
 
 
 
