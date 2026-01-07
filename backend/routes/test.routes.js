@@ -62,4 +62,44 @@ router.get("/by-id/:id", auth, async (req, res) => {
   }
 });
 
+
+// 🏆 LEADERBOARD (ONLY AFTER TEST ENDS)
+router.get("/leaderboard/:testId", auth, async (req, res) => {
+  try {
+    const { testId } = req.params;
+
+    // 🔍 Fetch test
+    const test = await Test.findById(testId);
+    if (!test) {
+      return res.status(404).json({ msg: "Test not found" });
+    }
+
+    const now = new Date();
+
+    // ⛔ BLOCK before test end
+    if (now < test.endTime) {
+      return res.status(403).json({
+        msg: "Leaderboard will be available after the test ends"
+      });
+    }
+
+    // ✅ Test ended → fetch leaderboard
+    const results = await Result.find({ testId })
+      .populate("studentId", "name")
+      .sort({ score: -1 });
+
+    const leaderboard = results.map((r, index) => ({
+      rank: index + 1,
+      name: r.studentId.name,
+      score: r.score
+    }));
+
+    res.json(leaderboard);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 module.exports = router;

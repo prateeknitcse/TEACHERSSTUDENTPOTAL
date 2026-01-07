@@ -1,4 +1,4 @@
-// Auth protection
+// 🔐 Auth protection
 if (!localStorage.getItem("token")) {
   window.location.href = "login.html";
 }
@@ -8,6 +8,7 @@ const correctEl = document.getElementById("correct");
 const wrongEl = document.getElementById("wrong");
 const analysisEl = document.getElementById("analysis");
 const backBtn = document.getElementById("backBtn");
+const viewLeaderboardBtn = document.getElementById("viewLeaderboardBtn");
 
 backBtn.onclick = () => {
   window.location.href = "dashboard.html";
@@ -28,6 +29,9 @@ async function loadResult() {
 
     const data = await res.json();
 
+    // Save testId for leaderboard
+    localStorage.setItem("testIdForLeaderboard", data.testId._id);
+
     const total = data.answers.length;
     const correct = data.answers.filter(a => a.selected === a.correct).length;
     const wrong = total - correct;
@@ -41,7 +45,8 @@ async function loadResult() {
 
     data.answers.forEach((a, i) => {
       const div = document.createElement("div");
-      div.className = "analysis-card " + 
+      div.className =
+        "analysis-card " +
         (a.selected === a.correct ? "correct" : "wrong");
 
       div.innerHTML = `
@@ -58,5 +63,10 @@ async function loadResult() {
     alert("Failed to load result");
   }
 }
+
+// Leaderboard button
+viewLeaderboardBtn.onclick = () => {
+  window.location.href = "leaderboard.html";
+};
 
 loadResult();
