@@ -75,6 +75,56 @@ router.get("/student/my-tests", auth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+const User = require("../models/User");
+
+// 📊 ADMIN ANALYTICS
+router.get("/analytics", auth, async (req, res) => {
+  try {
+    // Optional: restrict to admin
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ msg: "Access denied" });
+    }
+
+    const tests = await Test.find().sort({ createdAt: -1 });
+
+    const analytics = [];
+
+    for (const test of tests) {
+      const results = await Result.find({ testId: test._id })
+        .populate("studentId", "name")
+        .sort({ score: -1, submittedAt: 1 });
+
+      const attempts = results.length;
+
+      let avgScore = 0;
+      let topper = null;
+
+      if (attempts > 0) {
+        avgScore =
+          results.reduce((sum, r) => sum + r.score, 0) / attempts;
+
+        topper = {
+          name: results[0].studentId.name,
+          score: results[0].score
+        };
+      }
+
+      analytics.push({
+        testId: test._id,
+        title: test.title,
+        className: test.className,
+        attempts,
+        avgScore: avgScore.toFixed(2),
+        topper
+      });
+    }
+
+    res.json(analytics);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 
 module.exports = router;

@@ -12,7 +12,11 @@ const ResultSchema = new mongoose.Schema({
     required: true
   },
   score: Number,
-  answers: Array
+  answers: Array,
+   submittedAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 // 🚨 Prevent duplicate submissions (DB-level safety)

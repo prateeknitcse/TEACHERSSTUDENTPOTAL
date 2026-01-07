@@ -42,6 +42,13 @@ router.get("/seed", async (req, res) => {
       password: studentPass,
       role: "student",
       className: "Class 9A"
+    },
+    {
+      name: "Prateeksingh",
+      username: "student2",
+      password: studentPass,
+      role: "student",
+      className: "Class 9A"
     }
   ]);
 

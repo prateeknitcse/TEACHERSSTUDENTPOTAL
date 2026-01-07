@@ -86,10 +86,12 @@ router.get("/leaderboard/:testId", auth, async (req, res) => {
     // ✅ Test ended → fetch leaderboard
     const results = await Result.find({ testId })
       .populate("studentId", "name")
-      .sort({ score: -1 });
+      .sort({ score: -1, submittedAt: 1 });
+
 
     const leaderboard = results.map((r, index) => ({
       rank: index + 1,
+      studentId: r.studentId._id.toString(),
       name: r.studentId.name,
       score: r.score
     }));
