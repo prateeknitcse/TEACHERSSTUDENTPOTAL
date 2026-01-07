@@ -1,18 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Students</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
 <nav class="nav">
   <span>Manage Students</span>
-  <span class="right" onclick="history.back()">Back</span>
+  <span class="right" onclick="location.href='admin-dashboard.html'">Back</span>
 </nav>
 
 <main class="container fade-in">
 
   <section>
     <h2>➕ Add Student</h2>
-    <!-- existing add-student form -->
+    <div class="card">
+      <label>Class</label>
+      <select id="studentClass">
+        <option>Class 9A</option>
+        <option>Class 9B</option>
+        <option>Class 10A</option>
+      </select>
+
+      <label>Name</label>
+      <input id="studentName" placeholder="Student name"/>
+
+      <button class="btn full" id="addStudentBtn">Add Student</button>
+      <p class="note" id="studentInfo"></p>
+    </div>
   </section>
 
   <section>
     <h2>📥 Bulk Upload</h2>
-    <!-- CSV upload -->
+    <div class="card">
+      <input type="file" id="csvFile" accept=".csv"/>
+      <button class="btn full" id="uploadBtn">Upload CSV</button>
+      <pre class="note" id="uploadResult"></pre>
+    </div>
   </section>
 
   <section>
@@ -23,3 +50,5 @@
 </main>
 
 <script src="js/admin-students.js"></script>
+</body>
+</html>
