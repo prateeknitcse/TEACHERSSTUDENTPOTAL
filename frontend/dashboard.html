@@ -8,75 +8,46 @@
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="nav">
-    <span>Dashboard</span>
-    <span class="right" id="logoutBtn">Logout</span>
-  </nav>
+<nav class="nav">
+  <span>Dashboard</span>
+  <span class="right" id="logoutBtn">Logout</span>
+</nav>
 
-  <main class="container fade-in">
+<main class="container fade-in">
 
-    <h2>Welcome, Student</h2>
+  <h2>Welcome</h2>
 
-    <!-- Stats -->
+  <!-- Test Sections -->
+  <section>
+    <h3>📅 Upcoming Tests</h3>
+    <div class="grid" id="upcomingTests"></div>
+  </section>
+
+  <section>
+    <h3>🔴 Live Tests</h3>
+    <div class="grid" id="liveTests"></div>
+  </section>
+
+  <section>
+    <h3>✅ Attempted Tests</h3>
+    <div class="grid" id="attemptedTests"></div>
+  </section>
+
+  <!-- Quick Links -->
+  <section>
+    <h3>Quick Actions</h3>
     <div class="grid">
-      <div class="box">
-        <p>Last Test</p>
-        <h3>78 / 100</h3>
+      <div class="box clickable" onclick="location.href='leaderboard.html'">
+        🏆 Leaderboard
       </div>
-
-      <div class="box">
-        <p>Class Rank</p>
-        <h3>#4</h3>
+      <div class="box clickable" onclick="location.href='questions.html'">
+        ❓ Ask a Question
       </div>
     </div>
+  </section>
 
-    <!-- Actions -->
-    <section>
-      <h3>Actions</h3>
+</main>
 
-      <div class="grid">
-        <div class="box clickable" id="startTestBtn">
-          📝 Start Test
-        </div>
-
-        <div class="box clickable" onclick="window.location.href='leaderboard.html'">
-          🏆 Leaderboard
-        </div>
-
-        <div class="box clickable" onclick="window.location.href='questions.html'">
-          ❓ Ask Question
-        </div>
-      </div>
-    </section>
-
-    <!-- Notifications -->
-    <section>
-      <h3>Notifications</h3>
-      <ul class="list">
-        <li>📢 Test on Monday</li>
-        <li>📅 New timetable uploaded</li>
-      </ul>
-    </section>
-    <section>
-  <h3>📅 Upcoming Tests</h3>
-  <div class="grid" id="upcomingTests"></div>
-</section>
-
-<section>
-  <h3>🔴 Live Tests</h3>
-  <div class="grid" id="liveTests"></div>
-</section>
-
-<section>
-  <h3>✅ Attempted Tests</h3>
-  <div class="grid" id="attemptedTests"></div>
-</section>
-
-
-  </main>
-
-  <!-- JS -->
-  <script src="js/dashboard.js"></script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>
