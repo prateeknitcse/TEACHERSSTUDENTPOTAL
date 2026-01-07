@@ -312,6 +312,10 @@ input, select {
 .leaderboard-row.me td {
   border-color: #000;
 }
+#analytics .card {
+  margin-top: 15px;
+}
+
 
 
 
