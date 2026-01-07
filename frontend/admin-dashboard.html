@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <span>Admin Dashboard</span>
+  <span class="right" id="logoutBtn">Logout</span>
+</nav>
+
+<main class="container fade-in">
+
+  <h2>Overview</h2>
+
+  <!-- Stats -->
+  <div class="grid">
+    <div class="box">
+      <p>Total Students</p>
+      <h3 id="totalStudents">--</h3>
+    </div>
+
+    <div class="box">
+      <p>Students in Class</p>
+      <select id="classFilter">
+        <option value="">Select Class</option>
+        <option>Class 9A</option>
+        <option>Class 9B</option>
+        <option>Class 10A</option>
+      </select>
+      <h3 id="classStudents">--</h3>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <section>
+    <h3>Admin Actions</h3>
+    <div class="grid">
+      <div class="box clickable" onclick="location.href='admin-create-test.html'">
+        📝 Create Test
+      </div>
+      <div class="box clickable" onclick="location.href='admin-students.html'">
+        👨‍🎓 Manage Students
+      </div>
+    </div>
+  </section>
+
+  <!-- Analytics -->
+  <section>
+    <h3>📊 Test Analytics</h3>
+    <div class="grid" id="analytics"></div>
+  </section>
+
+</main>
+
+<script src="js/admin-dashboard.js"></script>
+</body>
+</html>
