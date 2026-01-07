@@ -8,62 +8,27 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
-  <nav class="nav">
-    <span>Leaderboard – Class 9A</span>
-    <span class="right">Back</span>
-  </nav>
+<nav class="nav">
+  <span>Leaderboard</span>
+  <span class="right" id="backBtn">Back</span>
+</nav>
 
-  <main class="container fade-in">
+<main class="container fade-in">
 
-    <!-- Header -->
-    <div class="leaderboard-header">
-      <h2>Top Performers</h2>
-      <p>Latest MCQ Test</p>
-    </div>
+  <h2>Test Leaderboard</h2>
 
-    <!-- Leaderboard Table -->
-    <div class="leaderboard">
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Name</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboardBody"></tbody>
+  </table>
 
-      <div class="leaderboard-row header">
-        <span>Rank</span>
-        <span>Name</span>
-        <span>Score</span>
-      </div>
-
-      <div class="leaderboard-row top">
-        <span>#1</span>
-        <span>Rahul</span>
-        <span>92</span>
-      </div>
-
-      <div class="leaderboard-row top">
-        <span>#2</span>
-        <span>Aman</span>
-        <span>88</span>
-      </div>
-
-      <div class="leaderboard-row you">
-        <span>#3</span>
-        <span>You</span>
-        <span>78</span>
-      </div>
-
-      <div class="leaderboard-row">
-        <span>#4</span>
-        <span>Riya</span>
-        <span>75</span>
-      </div>
-
-      <div class="leaderboard-row">
-        <span>#5</span>
-        <span>Neha</span>
-        <span>70</span>
-      </div>
-
-    </div>
-
-  </main>
+</main>
 
 <script src="js/leaderboard.js"></script>
 </body>
