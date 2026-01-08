@@ -1,5 +1,6 @@
+// 🔐 Auth protection
 if (!localStorage.getItem("token")) {
-  location.href = "index.html";
+  location.href = "login.html"; // ✅ FIXED
 }
 
 const grid = document.getElementById("testsGrid");
@@ -38,7 +39,7 @@ async function loadData() {
 }
 
 function renderTests(type) {
-  grid.innerHTML = "";
+  grid.innerHTML = ""; // ✅ ensure clean render
   const now = new Date();
 
   allTests.forEach(test => {
@@ -48,29 +49,15 @@ function renderTests(type) {
 
     let status = null;
 
-// 🚫 Test not started yet → hide completely
-if (now < start) {
-  return;
-}
+    // 🚫 Test not started yet → hide completely
+    if (now < start) return;
 
-// ✅ Attempted overrides everything
-if (attempted) {
-  status = "attempted";
-}
+    // ✅ Attempted overrides everything
+    if (attempted) status = "attempted";
+    else if (now >= start && now <= end) status = "live";
+    else if (now > end) status = "unattempted";
 
-// 🔴 Live test
-else if (now >= start && now <= end) {
-  status = "live";
-}
-
-// 🟡 Missed / unattempted
-else if (now > end && !attempted) {
-  status = "unattempted";
-}
-
-// If status doesn't match selected tab, skip
-if (status !== type) return;
-
+    if (status !== type) return;
 
     const card = document.createElement("div");
     card.className = "box clickable";
@@ -80,14 +67,21 @@ if (status !== type) return;
     `;
 
     card.onclick = () => {
-      localStorage.setItem("selectedTestId", test._id);
+      localStorage.setItem("testId", test._id); // ✅ unify key
 
-      if (status === "live") location.href = "test.html";
-      else location.href = "test-details.html";
+      if (status === "live") {
+        location.href = "test.html";
+      } else {
+        location.href = "test-details.html";
+      }
     };
 
     grid.appendChild(card);
   });
+
+  if (!grid.children.length) {
+    grid.innerHTML = "<p class='note'>No tests</p>";
+  }
 }
 
 loadData();
