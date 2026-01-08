@@ -84,6 +84,7 @@ if (!duration || duration <= 0) {
       title,
       startTime,
       endTime,
+      duration,
       questions: formattedQuestions
     })
   });

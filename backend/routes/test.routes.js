@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Test = require("../models/Test");
+const Result = require("../models/Result"); // ✅ FIX: missing import
 const auth = require("../middleware/auth.middleware");
 
 // 🧑‍🏫 ADMIN: CREATE TEST
@@ -63,7 +64,6 @@ router.get("/by-id/:id", auth, async (req, res) => {
   }
 });
 
-
 // 🏆 LEADERBOARD (ONLY AFTER TEST ENDS)
 router.get("/leaderboard/:testId", auth, async (req, res) => {
   try {
@@ -89,7 +89,6 @@ router.get("/leaderboard/:testId", auth, async (req, res) => {
       .populate("studentId", "name")
       .sort({ score: -1, submittedAt: 1 });
 
-
     const leaderboard = results.map((r, index) => ({
       rank: index + 1,
       studentId: r.studentId._id.toString(),
@@ -98,11 +97,9 @@ router.get("/leaderboard/:testId", auth, async (req, res) => {
     }));
 
     res.json(leaderboard);
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router;
