@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Analytics</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <span>Analytics</span>
+  <span class="right" onclick="location.href='admin-dashboard.html'">Back</span>
+</nav>
+
+<main class="container fade-in">
+
+  <h2>Select Class</h2>
+  <select id="classSelect">
+    <option value="">Select Class</option>
+    <option>Class 9A</option>
+    <option>Class 9B</option>
+    <option>Class 10A</option>
+  </select>
+
+  <section>
+    <h3>Tests</h3>
+    <div class="grid" id="testsGrid"></div>
+  </section>
+
+  <section id="analyticsPanel" style="display:none">
+    <h3>Test Analytics</h3>
+
+    <div class="grid" id="summaryGrid"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+  </section>
+
+</main>
+
+<script src="js/admin-analytics.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@ if (!localStorage.getItem("token")) {
   location.href = "index.html";
 }
 
-// Logout
+// 🔓 Logout
 const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.onclick = () => {
@@ -19,75 +19,34 @@ async function loadStudentStats() {
       headers: { Authorization: localStorage.getItem("token") }
     });
 
-    if (!res.ok) {
-      throw new Error("Unauthorized");
-    }
+    if (!res.ok) throw new Error("Unauthorized");
 
     const students = await res.json();
-    document.getElementById("totalStudents").innerText = students.length;
 
-    const filter = document.getElementById("classFilter");
-    const classCount = document.getElementById("classStudents");
+    const totalStudentsEl = document.getElementById("totalStudents");
+    const classFilter = document.getElementById("classFilter");
+    const classStudentsEl = document.getElementById("classStudents");
 
-    filter.onchange = () => {
-      if (!filter.value) {
-        classCount.innerText = "--";
+    totalStudentsEl.innerText = students.length;
+
+    classFilter.onchange = () => {
+      if (!classFilter.value) {
+        classStudentsEl.innerText = "--";
         return;
       }
 
       const count = students.filter(
-        s => s.className === filter.value
+        s => s.className === classFilter.value
       ).length;
 
-      classCount.innerText = count;
+      classStudentsEl.innerText = count;
     };
 
   } catch (err) {
-    alert("Failed to load student data");
     console.error(err);
+    alert("Failed to load student stats");
   }
 }
 
-// 📈 Load analytics
-async function loadAnalytics() {
-  try {
-    const res = await fetch("http://localhost:5000/api/tests/analytics", {
-      headers: { Authorization: localStorage.getItem("token") }
-    });
-
-    if (!res.ok) {
-      throw new Error("Unauthorized");
-    }
-
-    const data = await res.json();
-    const container = document.getElementById("analytics");
-    container.innerHTML = "";
-
-    data.forEach(test => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <h3>${test.title}</h3>
-        <p><strong>Class:</strong> ${test.className}</p>
-        <p><strong>Attempts:</strong> ${test.attempts}</p>
-        <p><strong>Average Score:</strong> ${test.avgScore}</p>
-        <p><strong>Topper:</strong> ${
-          test.topper
-            ? `${test.topper.name} (${test.topper.score})`
-            : "—"
-        }</p>
-      `;
-
-      container.appendChild(card);
-    });
-
-  } catch (err) {
-    alert("Failed to load analytics");
-    console.error(err);
-  }
-}
-
-// INIT
+// 🚀 INIT
 loadStudentStats();
-loadAnalytics();
