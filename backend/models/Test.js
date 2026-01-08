@@ -23,7 +23,12 @@ const TestSchema = new mongoose.Schema({
   endTime: {
     type: Date,
     required: true
-  }
+  },
+  duration: {
+  type: Number,
+  required: true // in minutes
+}
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Test", TestSchema);

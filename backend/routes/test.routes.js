@@ -5,9 +5,9 @@ const auth = require("../middleware/auth.middleware");
 // 🧑‍🏫 ADMIN: CREATE TEST
 router.post("/create", auth, async (req, res) => {
   try {
-    const { className, title, startTime, endTime, questions } = req.body;
+    const { className, title, startTime, endTime, duration, questions } = req.body;
 
-    if (!className || !title || !startTime || !endTime || !questions) {
+    if (!className || !title || !startTime || !endTime || !duration || !questions) {
       return res.status(400).json({ msg: "All fields are required" });
     }
 
@@ -16,6 +16,7 @@ router.post("/create", auth, async (req, res) => {
       title,
       startTime,
       endTime,
+      duration,
       questions
     });
 
