@@ -42,13 +42,28 @@ async function loadLeaderboard() {
 
     tbody.innerHTML = "";
 
-    data.forEach((row, i) => {
+    data.forEach(row => {
       const tr = document.createElement("tr");
       tr.className = "leaderboard-row";
 
       // ⭐ Highlight current student
       if (row.studentId === currentStudentId) {
         tr.classList.add("me");
+      }
+
+      let certificateCell = "";
+
+      // 🎓 Show certificate ONLY for rank 1–3 AND current student
+      if (
+        row.rank <= 3 &&
+        row.studentId === currentStudentId
+      ) {
+        certificateCell = `
+          <button class="btn outline"
+            onclick="downloadCertificate('${testId}')">
+            🎓 Download
+          </button>
+        `;
       }
 
       tr.innerHTML = `
@@ -58,6 +73,7 @@ async function loadLeaderboard() {
           ${row.studentId === currentStudentId ? "<strong>(You)</strong>" : ""}
         </td>
         <td>${row.score}</td>
+        <td>${certificateCell}</td>
       `;
 
       tbody.appendChild(tr);
@@ -73,6 +89,14 @@ async function loadLeaderboard() {
     console.error(err);
     alert("Failed to load leaderboard");
   }
+}
+
+// 🎓 Certificate download
+function downloadCertificate(testId) {
+  window.open(
+    `http://localhost:5000/api/certificates/${testId}`,
+    "_blank"
+  );
 }
 
 loadLeaderboard();
