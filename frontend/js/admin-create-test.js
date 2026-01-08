@@ -39,6 +39,13 @@ createTestBtn.onclick = async () => {
   const title = document.getElementById("title").value;
   const startTime = document.getElementById("startTime").value;
   const endTime = document.getElementById("endTime").value;
+  const duration = Number(document.getElementById("duration").value);
+
+if (!duration || duration <= 0) {
+  alert("Enter valid test duration");
+  return;
+}
+
 
   if (!className || !title || !startTime || !endTime) {
     alert("Fill all test details");
