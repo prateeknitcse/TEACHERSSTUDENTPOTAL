@@ -6,9 +6,13 @@ let testId = localStorage.getItem("testId");
 
 let remainingSeconds = 0;
 let timerInterval = null;
+let autosaveInterval = null;
+let warned = false;
+
+const STORAGE_KEY = `activeTest_${testId}`;
 
 const qEl = document.getElementById("question");
-const optContainer = document.getElementById("options") || document.querySelector(".options");
+const optContainer = document.getElementById("options");
 const qNo = document.getElementById("qNo");
 const totalQ = document.getElementById("totalQ");
 const timerEl = document.getElementById("timer");
@@ -17,69 +21,79 @@ const nextBtn = document.getElementById("nextBtn");
 // 🔐 AUTH + FLOW PROTECTION
 if (!localStorage.getItem("token") || !testId) {
   alert("Invalid test access");
-  window.location.href = "dashboard.html";
+  location.href = "dashboard.html";
 }
 
-// 🔹 LOAD TEST BY testId (LIVE ONLY)
+// 🔹 LOAD TEST
 async function loadTest() {
   try {
-    const res = await fetch(`http://localhost:5000/api/tests/by-id/${testId}`, {
-      headers: {
-        "Authorization": localStorage.getItem("token")
-      }
-    });
-
-    if (!res.ok) {
-      alert("Test not available");
-      window.location.href = "dashboard.html";
-      return;
-    }
+    const res = await fetch(
+      `http://localhost:5000/api/tests/by-id/${testId}`,
+      { headers: { Authorization: localStorage.getItem("token") } }
+    );
 
     const data = await res.json();
 
-    // 🔒 Enforce live window (unchanged)
     const now = new Date();
     const start = new Date(data.startTime);
     const end = new Date(data.endTime);
 
-    if (now < start) {
-      alert("Test has not started yet");
-      window.location.href = "dashboard.html";
+    if (now < start || now > end) {
+      alert("Test not active");
+      location.href = "dashboard.html";
       return;
     }
 
-    if (now > end) {
-      alert("Test has already ended");
-      window.location.href = "dashboard.html";
-      return;
-    }
-
-    // ✅ INIT TEST
     document.getElementById("testTitle").innerText = data.title;
     questions = data.questions;
-
-    // ⏱ USE ADMIN-SET DURATION (minutes → seconds)
-    remainingSeconds = data.duration * 60;
-
-    qNo.innerText = 1;
     totalQ.innerText = questions.length;
 
+    restoreProgress(data.duration);
     startTimer();
+    startAutoSave();
     loadQuestion();
 
   } catch (err) {
-    console.error(err);
     alert("Failed to load test");
-    window.location.href = "dashboard.html";
+    location.href = "dashboard.html";
   }
 }
 
-// 🔹 RENDER QUESTION
+// 🔹 RESTORE PROGRESS
+function restoreProgress(duration) {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+  if (saved) {
+    answers = saved.answers || [];
+    current = saved.current || 0;
+    remainingSeconds = saved.remainingSeconds;
+  } else {
+    remainingSeconds = duration * 60;
+  }
+}
+
+// 🔹 SAVE PROGRESS
+function saveProgress() {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      answers,
+      current,
+      remainingSeconds
+    })
+  );
+}
+
+// 🔹 AUTO SAVE EVERY 10 SECONDS
+function startAutoSave() {
+  autosaveInterval = setInterval(saveProgress, 10000);
+}
+
+// 🔹 LOAD QUESTION
 function loadQuestion() {
   const q = questions[current];
   qNo.innerText = current + 1;
   qEl.innerText = q.question;
-
   optContainer.innerHTML = "";
   selected = null;
 
@@ -87,15 +101,12 @@ function loadQuestion() {
     const btn = document.createElement("button");
     btn.className = "option";
     btn.innerText = opt;
-
     btn.onclick = () => {
-      document
-        .querySelectorAll(".option")
+      document.querySelectorAll(".option")
         .forEach(b => b.classList.remove("selected"));
       btn.classList.add("selected");
       selected = index;
     };
-
     optContainer.appendChild(btn);
   });
 }
@@ -103,7 +114,7 @@ function loadQuestion() {
 // 🔹 NEXT / SUBMIT
 nextBtn.onclick = () => {
   if (selected === null) {
-    alert("Please select an option");
+    alert("Select an option");
     return;
   }
 
@@ -122,57 +133,21 @@ nextBtn.onclick = () => {
   }
 };
 
-// 🔹 SUBMIT TEST (AUTO / MANUAL)
-async function submitTest(auto = false) {
-  clearInterval(timerInterval);
-
-  let score = 0;
-  answers.forEach(a => {
-    if (a.selected === a.correct) score++;
-  });
-
-  try {
-    const res = await fetch("http://localhost:5000/api/results/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("token")
-      },
-      body: JSON.stringify({
-        testId,
-        score,
-        answers,
-        autoSubmitted: auto
-      })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.msg || "Submission failed");
-      window.location.href = "dashboard.html";
-      return;
-    }
-
-    localStorage.removeItem("testId");
-    window.location.href = "result.html";
-
-  } catch (err) {
-    console.error(err);
-    alert("Submission error");
-    window.location.href = "dashboard.html";
-  }
-}
-
-// 🔹 TIMER (DURATION-BASED + AUTO SUBMIT)
+// 🔹 TIMER + WARNING
 function startTimer() {
   updateTimerUI();
 
   timerInterval = setInterval(() => {
     remainingSeconds--;
 
+    // ⚠️ 1-minute warning
+    if (remainingSeconds === 60 && !warned) {
+      warned = true;
+      alert("⚠️ Only 1 minute left!");
+    }
+
     if (remainingSeconds <= 0) {
-      submitTest(true); // ⛔ AUTO SUBMIT
+      submitTest(true);
       return;
     }
 
@@ -185,6 +160,40 @@ function updateTimerUI() {
   const sec = remainingSeconds % 60;
   timerEl.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
 }
+
+// 🔹 SUBMIT TEST
+async function submitTest(auto) {
+  clearInterval(timerInterval);
+  clearInterval(autosaveInterval);
+  localStorage.removeItem(STORAGE_KEY);
+
+  let score = answers.filter(a => a.selected === a.correct).length;
+
+  await fetch("http://localhost:5000/api/results/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: localStorage.getItem("token")
+    },
+    body: JSON.stringify({
+      testId,
+      score,
+      answers,
+      autoSubmitted: auto
+    })
+  });
+
+  localStorage.removeItem("testId");
+  location.href = "result.html";
+}
+
+// 🔒 TAB SWITCH PREVENTION
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    alert("⚠️ Tab switching is not allowed. Test will be submitted.");
+    submitTest(true);
+  }
+});
 
 // 🚀 INIT
 loadTest();
