@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,13 +15,8 @@
 
   <h2>Overview</h2>
 
-  <!-- Stats -->
   <div class="grid">
-    <div class="box">
-      <p>Total Students</p>
-      <h3 id="totalStudents">--</h3>
-    </div>
-
+    <div class="box"><p>Total Students</p><h3 id="totalStudents">--</h3></div>
     <div class="box">
       <p>Students in Class</p>
       <select id="classFilter">
@@ -36,22 +29,13 @@
     </div>
   </div>
 
-  <!-- Admin Actions -->
-  <section>
-    <h3>Quick Actions</h3>
-    <div class="grid">
-      <div class="box clickable" onclick="location.href='admin-create-test.html'">
-        📝 Create Test
-      </div>
-      <div class="box clickable" onclick="location.href='admin-students.html'">
-        👨‍🎓 Manage Students
-      </div>
-    </div>
-  </section>
+  <div class="grid">
+    <div class="box clickable" onclick="location.href='admin-create-test.html'">📝 Create Test</div>
+    <div class="box clickable" onclick="location.href='admin-students.html'">👨‍🎓 Manage Students</div>
+  </div>
 
-  <!-- Analytics -->
   <section>
-    <h3>📊 Test Analytics</h3>
+    <h3>📊 Analytics</h3>
     <div class="grid" id="analytics"></div>
   </section>
 
