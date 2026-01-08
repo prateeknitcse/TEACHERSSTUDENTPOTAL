@@ -6,6 +6,13 @@ if (!testId) {
 
 const leaderboardBtn = document.getElementById("leaderboardBtn");
 const leaderboardNote = document.getElementById("leaderboardNote");
+const analysisBtn = document.getElementById("analysisBtn");
+
+let unlockTimer = null;
+
+analysisBtn.onclick = () => {
+  location.href = "result.html";
+};
 
 async function loadDetails() {
   try {
@@ -28,22 +35,13 @@ async function loadDetails() {
       test.questions.length;
 
     const endTime = new Date(test.endTime);
-    const now = new Date();
-
-    // 🔒 Disable leaderboard until test ends
-    if (now < endTime) {
-      leaderboardBtn.disabled = true;
-      leaderboardNote.innerText =
-        "Leaderboard will be available after the test ends.";
-    } else {
-      leaderboardBtn.disabled = false;
-      leaderboardNote.innerText = "";
-    }
 
     leaderboardBtn.onclick = () => {
       localStorage.setItem("testIdForLeaderboard", testId);
       location.href = "leaderboard.html";
     };
+
+    startLeaderboardCountdown(endTime);
 
   } catch (err) {
     console.error(err);
@@ -51,8 +49,28 @@ async function loadDetails() {
   }
 }
 
-document.getElementById("analysisBtn").onclick = () => {
-  location.href = "result.html";
-};
+function startLeaderboardCountdown(endTime) {
+  unlockTimer = setInterval(() => {
+    const now = new Date();
+    const diff = endTime - now;
+
+    if (diff <= 0) {
+      clearInterval(unlockTimer);
+      leaderboardBtn.disabled = false;
+      leaderboardBtn.classList.remove("disabled-btn");
+      leaderboardNote.innerText = "";
+      return;
+    }
+
+    leaderboardBtn.disabled = true;
+    leaderboardBtn.classList.add("disabled-btn");
+
+    const mins = Math.floor(diff / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    leaderboardNote.innerText =
+      `Leaderboard unlocks in ${mins} min ${secs} sec`;
+  }, 1000);
+}
 
 loadDetails();
