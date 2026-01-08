@@ -1,6 +1,6 @@
 // 🔐 Auth guard
 if (!localStorage.getItem("token")) {
-  location.href = "login.html";
+  location.href = "index.html";
 }
 
 let allStudents = [];

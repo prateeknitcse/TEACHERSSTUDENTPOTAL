@@ -1,6 +1,6 @@
 // 🔐 Auth protection
 if (!localStorage.getItem("token")) {
-  window.location.href = "login.html";
+  window.location.href = "index.html";
 }
 
 const questionsDiv = document.getElementById("questions");

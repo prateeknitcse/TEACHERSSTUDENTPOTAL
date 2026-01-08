@@ -8,7 +8,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.onclick = () => {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "index.html";
   };
 }
 

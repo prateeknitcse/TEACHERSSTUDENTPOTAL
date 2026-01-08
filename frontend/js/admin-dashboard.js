@@ -1,6 +1,6 @@
 // 🔐 Auth guard
 if (!localStorage.getItem("token")) {
-  location.href = "login.html";
+  location.href = "index.html";
 }
 
 // Logout
@@ -8,7 +8,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
   logoutBtn.onclick = () => {
     localStorage.clear();
-    location.href = "login.html";
+    location.href = "index.html";
   };
 }
 
