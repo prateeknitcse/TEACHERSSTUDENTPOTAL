@@ -283,3 +283,83 @@ tr:not(:last-child) {
     grid-template-columns: 1fr;
   }
 }
+/* ---------- TEST LIST (PW STYLE) ---------- */
+.test-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.test-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  align-items: center;
+}
+
+.test-info h3 {
+  margin-bottom: 6px;
+}
+
+.test-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.test-date {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.test-action {
+  text-align: right;
+}
+
+.test-action .btn {
+  padding: 8px 16px;
+}
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.badge.live {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.badge.missed {
+  background: #ffedd5;
+  color: #f97316;
+}
+
+.badge.attempted {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .test-card {
+    grid-template-columns: 1fr;
+  }
+
+  .test-action {
+    text-align: left;
+  }
+}
+
