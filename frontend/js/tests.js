@@ -17,6 +17,9 @@ tabs.forEach(tab => {
   };
 });
 
+
+
+
 async function loadData() {
   const className = localStorage.getItem("className");
 
