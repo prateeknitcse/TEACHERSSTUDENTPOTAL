@@ -46,11 +46,31 @@ function renderTests(type) {
     const end = new Date(test.endTime);
     const attempted = attemptedTestIds.includes(test._id);
 
-    let status = "unattempted";
-    if (attempted) status = "attempted";
-    else if (now >= start && now <= end) status = "live";
+    let status = null;
 
-    if (status !== type) return;
+// 🚫 Test not started yet → hide completely
+if (now < start) {
+  return;
+}
+
+// ✅ Attempted overrides everything
+if (attempted) {
+  status = "attempted";
+}
+
+// 🔴 Live test
+else if (now >= start && now <= end) {
+  status = "live";
+}
+
+// 🟡 Missed / unattempted
+else if (now > end && !attempted) {
+  status = "unattempted";
+}
+
+// If status doesn't match selected tab, skip
+if (status !== type) return;
+
 
     const card = document.createElement("div");
     card.className = "box clickable";

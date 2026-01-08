@@ -348,6 +348,20 @@ table input {
   background: #fff;
   color: #000;
 }
+/* Disabled leaderboard button */
+.disabled-btn {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  animation: pulse 1.5s infinite;
+}
+
+/* Subtle pulse animation */
+@keyframes pulse {
+  0% { opacity: 0.35; }
+  50% { opacity: 0.55; }
+  100% { opacity: 0.35; }
+}
 
 
 
