@@ -9,6 +9,9 @@ let timerInterval = null;
 let autosaveInterval = null;
 let warned = false;
 
+let hasSubmitted = false;   // ✅ prevent double submit
+let testStarted = false;   // ✅ ensure test fully loaded
+
 const STORAGE_KEY = `activeTest_${testId}`;
 
 const qEl = document.getElementById("question");
@@ -52,6 +55,8 @@ async function loadTest() {
     startTimer();
     startAutoSave();
     loadQuestion();
+
+    testStarted = true; // ✅ test is now active
 
   } catch (err) {
     alert("Failed to load test");
@@ -140,7 +145,6 @@ function startTimer() {
   timerInterval = setInterval(() => {
     remainingSeconds--;
 
-    // ⚠️ 1-minute warning
     if (remainingSeconds === 60 && !warned) {
       warned = true;
       alert("⚠️ Only 1 minute left!");
@@ -161,8 +165,11 @@ function updateTimerUI() {
   timerEl.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
 }
 
-// 🔹 SUBMIT TEST
+// 🔹 SUBMIT TEST (SAFE)
 async function submitTest(auto) {
+  if (hasSubmitted) return;   // ✅ prevent double submit
+  hasSubmitted = true;
+
   clearInterval(timerInterval);
   clearInterval(autosaveInterval);
   localStorage.removeItem(STORAGE_KEY);
@@ -187,8 +194,10 @@ async function submitTest(auto) {
   location.href = "result.html";
 }
 
-// 🔒 TAB SWITCH PREVENTION
+// 🔒 TAB SWITCH PREVENTION (SAFE)
 document.addEventListener("visibilitychange", () => {
+  if (!testStarted || hasSubmitted) return;
+
   if (document.hidden) {
     alert("⚠️ Tab switching is not allowed. Test will be submitted.");
     submitTest(true);
