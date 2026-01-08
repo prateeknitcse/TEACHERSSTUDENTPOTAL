@@ -362,4 +362,18 @@ tr:not(:last-child) {
     text-align: left;
   }
 }
+/* ---------- ADMIN ANALYTICS ---------- */
+#analytics .card {
+  text-align: left;
+}
+
+#analytics h3 {
+  margin-bottom: 8px;
+}
+
+#analytics p {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
 
