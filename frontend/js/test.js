@@ -3,7 +3,8 @@ let current = 0;
 let selected = null;
 let answers = [];
 let testId = localStorage.getItem("testId");
-let endTime = null;
+
+let remainingSeconds = 0;
 let timerInterval = null;
 
 const qEl = document.getElementById("question");
@@ -36,7 +37,7 @@ async function loadTest() {
 
     const data = await res.json();
 
-    // 🔒 Enforce live window
+    // 🔒 Enforce live window (unchanged)
     const now = new Date();
     const start = new Date(data.startTime);
     const end = new Date(data.endTime);
@@ -53,10 +54,12 @@ async function loadTest() {
       return;
     }
 
-    // Init test
+    // ✅ INIT TEST
     document.getElementById("testTitle").innerText = data.title;
     questions = data.questions;
-    endTime = end;
+
+    // ⏱ USE ADMIN-SET DURATION (minutes → seconds)
+    remainingSeconds = data.duration * 60;
 
     qNo.innerText = 1;
     totalQ.innerText = questions.length;
@@ -115,12 +118,12 @@ nextBtn.onclick = () => {
   if (current < questions.length) {
     loadQuestion();
   } else {
-    submitTest();
+    submitTest(false);
   }
 };
 
-// 🔹 SUBMIT TEST (ONE ATTEMPT ONLY)
-async function submitTest() {
+// 🔹 SUBMIT TEST (AUTO / MANUAL)
+async function submitTest(auto = false) {
   clearInterval(timerInterval);
 
   let score = 0;
@@ -138,7 +141,8 @@ async function submitTest() {
       body: JSON.stringify({
         testId,
         score,
-        answers
+        answers,
+        autoSubmitted: auto
       })
     });
 
@@ -150,9 +154,7 @@ async function submitTest() {
       return;
     }
 
-    // Clear active test
     localStorage.removeItem("testId");
-
     window.location.href = "result.html";
 
   } catch (err) {
@@ -162,21 +164,26 @@ async function submitTest() {
   }
 }
 
-// 🔹 TIMER (SYNCED WITH endTime)
+// 🔹 TIMER (DURATION-BASED + AUTO SUBMIT)
 function startTimer() {
-  timerInterval = setInterval(() => {
-    const now = new Date();
-    const diff = Math.floor((endTime - now) / 1000);
+  updateTimerUI();
 
-    if (diff <= 0) {
-      submitTest();
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+
+    if (remainingSeconds <= 0) {
+      submitTest(true); // ⛔ AUTO SUBMIT
       return;
     }
 
-    const min = Math.floor(diff / 60);
-    const sec = diff % 60;
-    timerEl.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
+    updateTimerUI();
   }, 1000);
+}
+
+function updateTimerUI() {
+  const min = Math.floor(remainingSeconds / 60);
+  const sec = remainingSeconds % 60;
+  timerEl.innerText = `${min}:${sec < 10 ? "0" : ""}${sec}`;
 }
 
 // 🚀 INIT
