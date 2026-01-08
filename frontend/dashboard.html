@@ -1,53 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
 <nav class="nav">
   <span>Dashboard</span>
   <span class="right" id="logoutBtn">Logout</span>
 </nav>
 
 <main class="container fade-in">
-
   <h2>Welcome</h2>
 
-  <!-- Test Sections -->
-  <section>
-    <h3>📅 Upcoming Tests</h3>
-    <div class="grid" id="upcomingTests"></div>
-  </section>
-
-  <section>
-    <h3>🔴 Live Tests</h3>
-    <div class="grid" id="liveTests"></div>
-  </section>
-
-  <section>
-    <h3>✅ Attempted Tests</h3>
-    <div class="grid" id="attemptedTests"></div>
-  </section>
-
-  <!-- Quick Links -->
-  <section>
-    <h3>Quick Actions</h3>
-    <div class="grid">
-      <div class="box clickable" onclick="location.href='leaderboard.html'">
-        🏆 Leaderboard
-      </div>
-      <div class="box clickable" onclick="location.href='questions.html'">
-        ❓ Ask a Question
-      </div>
+  <div class="grid">
+    <div class="box clickable" onclick="location.href='tests.html'">
+      📘 My Tests
     </div>
-  </section>
 
+    <div class="box clickable" onclick="location.href='leaderboard.html'">
+      🏆 Leaderboard
+    </div>
+
+    <div class="box clickable" onclick="location.href='questions.html'">
+      ❓ Ask Question
+    </div>
+  </div>
 </main>
-
-<script src="js/dashboard.js"></script>
-</body>
-</html>

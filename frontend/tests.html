@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Tests</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <span>My Tests</span>
+  <span class="right" onclick="location.href='dashboard.html'">Back</span>
+</nav>
+
+<main class="container fade-in">
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-type="unattempted">Unattempted</button>
+    <button class="tab" data-type="live">Live</button>
+    <button class="tab" data-type="attempted">Attempted</button>
+  </div>
+
+  <!-- Tests Grid -->
+  <div class="grid" id="testsGrid"></div>
+
+</main>
+
+<script src="js/tests.js"></script>
+</body>
+</html>
