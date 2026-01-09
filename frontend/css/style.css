@@ -509,6 +509,61 @@ textarea::placeholder {
   background: #5b6cff;
   color: #fff;
 }
+.badge {
+  background: #6c7cff;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+textarea {
+  color: #000;
+  background: #fff;
+}
+/* ===========================
+   QUESTIONS PAGE FIX
+   =========================== */
+
+/* Page background */
+.container {
+  color: #111;
+}
+
+/* Question cards */
+.tab-content .card {
+  background: #ffffff;
+  color: #111;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+
+/* Question text */
+.tab-content .card p {
+  color: #111;
+}
+
+/* Answer text */
+.tab-content .card strong {
+  color: #2d2d2d;
+}
+
+/* Pending note */
+.tab-content .note {
+  color: #666;
+}
+
+/* Textarea typing fix */
+textarea {
+  color: #111 !important;
+  background: #fff;
+}
+
+/* Placeholder visible */
+textarea::placeholder {
+  color: #999;
+}
 
 
 

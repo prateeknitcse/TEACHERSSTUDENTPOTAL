@@ -1,6 +1,6 @@
 <nav class="nav">
   <span>Student Questions</span>
-  <span class="right" onclick="history.back()">Back</span>
+  <span class="right" onclick="location.href='admin-dashboard.html'">Back</span>
 </nav>
 
 <main class="container fade-in">
@@ -13,12 +13,16 @@
   </select>
 
   <div class="tabs">
-    <button class="tab active" data-type="unanswered">Asked</button>
-    <button class="tab" data-type="answered">Answered</button>
+    <button class="tab active" data-tab="asked">
+      Asked <span class="badge" id="askedCount">0</span>
+    </button>
+    <button class="tab" data-tab="answered">
+      Answered <span class="badge" id="answeredCount">0</span>
+    </button>
   </div>
 
-  <div id="questions"></div>
+  <section id="questions"></section>
 
 </main>
- <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
 <script src="js/admin-questions.js"></script>
