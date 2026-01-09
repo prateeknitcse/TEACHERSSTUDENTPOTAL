@@ -64,48 +64,45 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // LOAD QUESTIONS
-  // LOAD QUESTIONS
-async function loadQuestions(type) {
-  const res = await fetch("http://localhost:5000/api/questions/my", {
-    headers: { Authorization: localStorage.getItem("token") }
-  });
+ async function loadQuestions(type) {
+    const res = await fetch("http://localhost:5000/api/questions/my", {
+      headers: { Authorization: localStorage.getItem("token") }
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  // Badge counts
-  document.querySelector('[data-tab="answered"]').innerHTML =
-    `Answered <span class="badge">${data.answered.length}</span>`;
+    // badges
+    document.querySelector('[data-tab="answered"]').innerHTML =
+      `Answered <span class="badge">${data.answered.length}</span>`;
 
-  document.querySelector('[data-tab="pending"]').innerHTML =
-    `Pending <span class="badge">${data.pending.length}</span>`;
+    document.querySelector('[data-tab="pending"]').innerHTML =
+      `Pending <span class="badge">${data.pending.length}</span>`;
 
-  let arr = data.all;
+    let arr = data.all;
+    if (type === "answered") arr = data.answered;
+    if (type === "pending") arr = data.pending;
+    if (type === "your") arr = data.all;
 
-  if (type === "answered") arr = data.answered;
-  if (type === "pending") arr = data.pending;
-  if (type === "your") arr = data.all;
+    list.innerHTML = "";
 
-  const container = document.getElementById("questionsList");
-  container.innerHTML = "";
+    if (!arr || arr.length === 0) {
+      list.innerHTML = "<p class='note'>No questions</p>";
+      return;
+    }
 
-  if (!arr || arr.length === 0) {
-    container.innerHTML = "<p class='note'>No questions</p>";
-    return;
+    arr.forEach(q => {
+      list.innerHTML += `
+        <div class="card">
+          <p>❓ ${q.question}</p>
+          ${
+            q.isAnswered
+              ? `<p><strong>Answer:</strong> ${q.answer}</p>`
+              : `<p class="note">⏳ Pending</p>`
+          }
+        </div>
+      `;
+    });
   }
-
-  arr.forEach(q => {
-    container.innerHTML += `
-      <div class="card">
-        <p>❓ ${q.question}</p>
-        ${
-          q.isAnswered
-            ? `<p><strong>Answer:</strong> ${q.answer}</p>`
-            : `<p class="note">⏳ Pending</p>`
-        }
-      </div>
-    `;
-  });
-}
 
 
   // 🔄 REAL-TIME REFRESH
