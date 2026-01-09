@@ -1,14 +1,24 @@
-<select id="classSelect">
-  <option value="">Select Class</option>
-  <option>Class 9A</option>
-  <option>Class 9B</option>
-</select>
+<nav class="nav">
+  <span>Student Questions</span>
+  <span class="right" onclick="history.back()">Back</span>
+</nav>
 
-<div class="tabs">
-  <button class="tab active" data-type="unanswered">Unanswered</button>
-  <button class="tab" data-type="answered">Answered</button>
-</div>
+<main class="container fade-in">
 
-<div id="questions"></div>
+  <select id="classSelect">
+    <option value="">Select Class</option>
+    <option>Class 9A</option>
+    <option>Class 9B</option>
+    <option>Class 10A</option>
+  </select>
 
+  <div class="tabs">
+    <button class="tab active" data-type="unanswered">Asked</button>
+    <button class="tab" data-type="answered">Answered</button>
+  </div>
+
+  <div id="questions"></div>
+
+</main>
+ <link rel="stylesheet" href="css/style.css">
 <script src="js/admin-questions.js"></script>
