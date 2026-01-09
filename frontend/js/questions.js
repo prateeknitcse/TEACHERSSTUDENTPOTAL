@@ -5,10 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const askBtn = document.getElementById("submitQuestion");
   const input = document.getElementById("questionInput");
 
-  const yourSection = document.getElementById("your");
-  const answeredSection = document.getElementById("answered");
-  const pendingSection = document.getElementById("pending");
-
+  const list = document.getElementById("questionsList"); // ✅ FIX
   let lastTab = "your";
 
   // TAB SWITCHING
@@ -21,9 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = tab.dataset.tab;
       lastTab = target;
 
-      document.getElementById(target).classList.add("active");
-
-      if (target !== "ask") loadQuestions(target);
+      // ✅ Only two sections exist: ask & list
+      if (target === "ask") {
+        document.getElementById("ask").classList.add("active");
+      } else {
+        document.getElementById("list").classList.add("active");
+        loadQuestions(target);
+      }
     };
   });
 
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       input.value = "";
       alert("✅ Question submitted");
 
-      // ✅ FIX: switch to "Your Questions" tab
+      // switch to "Your Questions"
       document.querySelector('[data-tab="your"]').click();
 
     } catch (err) {
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // LOAD QUESTIONS
- async function loadQuestions(type) {
+  async function loadQuestions(type) {
     const res = await fetch("http://localhost:5000/api/questions/my", {
       headers: { Authorization: localStorage.getItem("token") }
     });
@@ -103,7 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     });
   }
-
 
   // 🔄 REAL-TIME REFRESH
   setInterval(() => {
