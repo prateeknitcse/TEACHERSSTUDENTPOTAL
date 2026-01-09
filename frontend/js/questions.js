@@ -1,78 +1,94 @@
-const tabs = document.querySelectorAll(".tab");
-const sections = document.querySelectorAll(".tab-section");
-const list = document.getElementById("questionsList");
+document.addEventListener("DOMContentLoaded", () => {
 
-tabs.forEach(tab => {
-  tab.onclick = () => {
-    // remove active state
-    tabs.forEach(t => t.classList.remove("active"));
-    sections.forEach(s => s.classList.remove("active"));
+  const tabs = document.querySelectorAll(".tab");
+  const sections = document.querySelectorAll(".tab-content");
+  const list = document.getElementById("questionsList");
+  const askBtn = document.getElementById("submitQuestion");
+  const input = document.getElementById("questionInput");
 
-    tab.classList.add("active");
-    const target = tab.dataset.tab;
+  // TAB SWITCHING
+  tabs.forEach(tab => {
+    tab.onclick = () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      sections.forEach(s => s.classList.remove("active"));
 
-    // ASK TAB
-    if (target === "ask") {
-      document.getElementById("ask").classList.add("active");
-    }
-    // ALL OTHER TABS
-    else {
-      document.getElementById("list").classList.add("active");
-      loadQuestions(target);
+      tab.classList.add("active");
+      const target = tab.dataset.tab;
+
+      if (target === "ask") {
+        document.getElementById("ask").classList.add("active");
+      } else {
+        document.getElementById("list").classList.add("active");
+        loadQuestions(target);
+      }
+    };
+  });
+
+  // ASK QUESTION
+  askBtn.onclick = async () => {
+    const text = input.value.trim();
+    if (!text) return alert("Enter a question");
+
+    try {
+      const res = await fetch("http://localhost:5000/api/questions/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token")
+        },
+        body: JSON.stringify({
+          question: text,
+          className: localStorage.getItem("className")
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.msg || "Failed to submit");
+        return;
+      }
+
+      input.value = "";
+      alert("✅ Question submitted");
+
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
     }
   };
-});
 
-// ASK QUESTION
-document.getElementById("askBtn").onclick = async () => {
-  const text = document.getElementById("questionInput").value.trim();
-  if (!text) return alert("Enter a question");
+  // LOAD QUESTIONS
+  async function loadQuestions(type) {
+    const res = await fetch("http://localhost:5000/api/questions/my", {
+      headers: { Authorization: localStorage.getItem("token") }
+    });
 
-  await fetch("http://localhost:5000/api/questions/ask", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: localStorage.getItem("token")
-    },
-    body: JSON.stringify({
-      question: text,
-      className: localStorage.getItem("className")
-    })
-  });
+    const data = await res.json();
+    let arr = data.all;
 
-  document.getElementById("questionInput").value = "";
-  alert("Question submitted");
-};
+    if (type === "answered") arr = data.answered;
+    if (type === "pending") arr = data.pending;
+    if (type === "your") arr = data.all;
 
-// LOAD QUESTIONS
-async function loadQuestions(type) {
-  const res = await fetch("http://localhost:5000/api/questions/my", {
-    headers: { Authorization: localStorage.getItem("token") }
-  });
+    list.innerHTML = "";
 
-  const data = await res.json();
-  let arr = data.all;
+    if (!arr || arr.length === 0) {
+      list.innerHTML = "<p class='note'>No questions</p>";
+      return;
+    }
 
-  if (type === "answered") arr = data.answered;
-  if (type === "pending") arr = data.pending;
-
-  list.innerHTML = "";
-
-  if (arr.length === 0) {
-    list.innerHTML = "<p class='note'>No questions</p>";
-    return;
+    arr.forEach(q => {
+      list.innerHTML += `
+        <div class="card">
+          <p>❓ ${q.question}</p>
+          ${
+            q.answer
+              ? `<p><strong>Answer:</strong> ${q.answer}</p>`
+              : `<p class="note">⏳ Pending</p>`
+          }
+        </div>
+      `;
+    });
   }
 
-  arr.forEach(q => {
-    list.innerHTML += `
-      <div class="card">
-        <p>❓ ${q.question}</p>
-        ${
-          q.answer
-            ? `<p><strong>Answer:</strong> ${q.answer}</p>`
-            : `<p class="note">⏳ Pending</p>`
-        }
-      </div>
-    `;
-  });
-}
+});

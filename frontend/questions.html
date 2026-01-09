@@ -17,20 +17,18 @@
   <section id="ask" class="tab-content active">
     <div class="card">
       <textarea id="questionInput" placeholder="Type your doubt..."></textarea>
-      <button class="btn full" id="submitQuestion">Submit</button>
+      <button class="btn full" id="submitQuestion" type="button">
+        Submit
+      </button>
     </div>
   </section>
 
-  <!-- YOUR QUESTIONS -->
-  <section id="your" class="tab-content"></section>
-
-  <!-- ANSWERED -->
-  <section id="answered" class="tab-content"></section>
-
-  <!-- PENDING -->
-  <section id="pending" class="tab-content"></section>
+  <!-- LIST (USED BY ALL OTHER TABS) -->
+  <section id="list" class="tab-content">
+    <div id="questionsList"></div>
+  </section>
 
 </main>
- <link rel="stylesheet" href="css/style.css">
 
+<link rel="stylesheet" href="css/style.css">
 <script src="js/questions.js"></script>
