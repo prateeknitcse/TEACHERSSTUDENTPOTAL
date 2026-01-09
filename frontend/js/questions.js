@@ -4,15 +4,19 @@ const list = document.getElementById("questionsList");
 
 tabs.forEach(tab => {
   tab.onclick = () => {
+    // remove active state
     tabs.forEach(t => t.classList.remove("active"));
     sections.forEach(s => s.classList.remove("active"));
 
     tab.classList.add("active");
     const target = tab.dataset.tab;
 
+    // ASK TAB
     if (target === "ask") {
       document.getElementById("ask").classList.add("active");
-    } else {
+    }
+    // ALL OTHER TABS
+    else {
       document.getElementById("list").classList.add("active");
       loadQuestions(target);
     }

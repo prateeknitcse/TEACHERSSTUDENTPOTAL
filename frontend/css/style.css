@@ -469,6 +469,48 @@ textarea {
   background: #111;
   border-radius: 6px;
 }
+textarea {
+  background: #ffffff;
+  color: #000000;        /* 🔴 THIS FIXES INVISIBLE TEXT */
+  border: 1.5px solid #5b6cff;
+  padding: 14px;
+  font-size: 15px;
+  resize: none;
+}
+
+textarea::placeholder {
+  color: #777;
+}
+.tab-content {
+  display: none;
+  margin-top: 20px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tab {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid #5b6cff;
+  background: transparent;
+  color: #5b6cff;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #5b6cff;
+  color: #fff;
+}
+
+
 
 
 
