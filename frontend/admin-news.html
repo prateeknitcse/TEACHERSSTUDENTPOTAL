@@ -1,0 +1,20 @@
+<nav class="nav">
+  <span>Admin • News</span>
+  <span class="right" onclick="history.back()">Back</span>
+</nav>
+
+<main class="container fade-in">
+  <div class="card">
+    <h3>Create Announcement</h3>
+
+    <input id="newsTitle" placeholder="News title" />
+    <textarea id="newsMessage" placeholder="News details..."></textarea>
+
+    <button class="btn full" id="publishBtn">Publish</button>
+  </div>
+
+  <div id="newsList"></div>
+</main>
+
+<link rel="stylesheet" href="css/style.css">
+<script src="js/admin-news.js"></script>
