@@ -12,7 +12,8 @@ router.post("/ask", auth, async (req, res) => {
       studentId: req.user.id,
       studentName: req.user.name,
       className,
-      question
+      question,
+      isAnswered: false
     });
 
     res.json(q);
@@ -34,14 +35,14 @@ router.get("/my", auth, async (req, res) => {
 });
 
 
-// 🧑‍🏫 ADMIN: QUESTIONS BY CLASS
-router.get("/class/:className", auth, async (req, res) => {
+// 🧑‍🏫 ADMIN: QUESTIONS BY CLASS  ✅ (PATH FIXED)
+router.get("/admin/:className", auth, async (req, res) => {
   const questions = await Question.find({
     className: req.params.className
   });
 
   res.json({
-    unanswered: questions.filter(q => !q.isAnswered),
+    asked: questions.filter(q => !q.isAnswered),
     answered: questions.filter(q => q.isAnswered)
   });
 });
