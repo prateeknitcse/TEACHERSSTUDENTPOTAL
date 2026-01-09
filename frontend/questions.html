@@ -1,26 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Questions</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+<div class="tabs">
+  <button class="tab active" data-type="ask">Ask</button>
+  <button class="tab" data-type="all">Your Questions</button>
+  <button class="tab" data-type="answered">Answered</button>
+  <button class="tab" data-type="pending">Pending</button>
+</div>
 
-<nav class="nav">
-  <span>Questions</span>
-  <span class="right" onclick="history.back()">Back</span>
-</nav>
+<div id="askSection" class="card">
+  <textarea id="questionInput" placeholder="Type your doubt..."></textarea>
+  <button class="btn full" id="askBtn">Submit</button>
+</div>
 
-<main class="container fade-in">
+<div id="questionsList"></div>
 
-  <div class="card">
-    <h3>Ask a Question</h3>
-    <textarea rows="4" placeholder="Type your question clearly..."></textarea>
-    <button class="btn full">Submit</button>
-  </div>
-
-</main>
-</body>
-</html>
+<script src="js/questions.js"></script>
