@@ -1,15 +1,31 @@
-<div class="tabs">
-  <button class="tab active" data-type="ask">Ask</button>
-  <button class="tab" data-type="all">Your Questions</button>
-  <button class="tab" data-type="answered">Answered</button>
-  <button class="tab" data-type="pending">Pending</button>
-</div>
+<nav class="nav">
+  <span>Questions</span>
+  <span class="right" onclick="history.back()">Back</span>
+</nav>
 
-<div id="askSection" class="card">
-  <textarea id="questionInput" placeholder="Type your doubt..."></textarea>
-  <button class="btn full" id="askBtn">Submit</button>
-</div>
+<main class="container fade-in">
 
-<div id="questionsList"></div>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="ask">Ask</button>
+    <button class="tab" data-tab="all">Your Questions</button>
+    <button class="tab" data-tab="answered">Answered</button>
+    <button class="tab" data-tab="pending">Pending</button>
+  </div>
+
+  <!-- ASK -->
+  <section id="ask" class="tab-section active">
+    <div class="card">
+      <textarea id="questionInput" placeholder="Type your doubt..."></textarea>
+      <button class="btn full" id="askBtn">Submit</button>
+    </div>
+  </section>
+
+  <!-- LIST -->
+  <section id="list" class="tab-section">
+    <div id="questionsList"></div>
+  </section>
+
+</main>
 
 <script src="js/questions.js"></script>

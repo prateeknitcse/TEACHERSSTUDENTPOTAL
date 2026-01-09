@@ -375,5 +375,39 @@ tr:not(:last-child) {
   font-size: 0.85rem;
   color: #4b5563;
 }
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #6c5ce7;
+  color: white;
+  border-color: #6c5ce7;
+}
+
+.tab-section {
+  display: none;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+}
+
 
 

@@ -1,19 +1,30 @@
 const tabs = document.querySelectorAll(".tab");
+const sections = document.querySelectorAll(".tab-section");
 const list = document.getElementById("questionsList");
-const askSection = document.getElementById("askSection");
 
 tabs.forEach(tab => {
   tab.onclick = () => {
     tabs.forEach(t => t.classList.remove("active"));
+    sections.forEach(s => s.classList.remove("active"));
+
     tab.classList.add("active");
-    load(tab.dataset.type);
+    const target = tab.dataset.tab;
+
+    if (target === "ask") {
+      document.getElementById("ask").classList.add("active");
+    } else {
+      document.getElementById("list").classList.add("active");
+      loadQuestions(target);
+    }
   };
 });
 
+// ASK QUESTION
 document.getElementById("askBtn").onclick = async () => {
-  const text = document.getElementById("questionInput").value;
+  const text = document.getElementById("questionInput").value.trim();
+  if (!text) return alert("Enter a question");
 
-  await fetch("/api/questions/ask", {
+  await fetch("http://localhost:5000/api/questions/ask", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,33 +36,39 @@ document.getElementById("askBtn").onclick = async () => {
     })
   });
 
-  alert("Question submitted");
   document.getElementById("questionInput").value = "";
+  alert("Question submitted");
 };
 
-async function load(type) {
-  const res = await fetch("/api/questions/my", {
+// LOAD QUESTIONS
+async function loadQuestions(type) {
+  const res = await fetch("http://localhost:5000/api/questions/my", {
     headers: { Authorization: localStorage.getItem("token") }
   });
 
   const data = await res.json();
+  let arr = data.all;
 
-  let arr = type === "answered" ? data.answered :
-            type === "pending" ? data.pending :
-            data.all;
+  if (type === "answered") arr = data.answered;
+  if (type === "pending") arr = data.pending;
 
-  askSection.style.display = type === "ask" ? "block" : "none";
   list.innerHTML = "";
+
+  if (arr.length === 0) {
+    list.innerHTML = "<p class='note'>No questions</p>";
+    return;
+  }
 
   arr.forEach(q => {
     list.innerHTML += `
       <div class="card">
         <p>❓ ${q.question}</p>
-        ${q.answer ? `<p><strong>Answer:</strong> ${q.answer}</p>` :
-        `<p class="note">⏳ Pending</p>`}
+        ${
+          q.answer
+            ? `<p><strong>Answer:</strong> ${q.answer}</p>`
+            : `<p class="note">⏳ Pending</p>`
+        }
       </div>
     `;
   });
 }
-
-load("ask");
