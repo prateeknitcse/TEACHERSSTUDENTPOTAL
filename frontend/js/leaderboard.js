@@ -22,8 +22,9 @@ backBtn.onclick = () => {
 
 async function loadLeaderboard() {
   try {
+    // ✅ FIX: correct API route
     const res = await fetch(
-      `http://localhost:5000/api/results/leaderboard/${testId}`,
+      `http://localhost:5000/api/tests/leaderboard/${testId}`,
       {
         headers: {
           "Authorization": localStorage.getItem("token")
@@ -54,10 +55,7 @@ async function loadLeaderboard() {
       let certificateCell = "";
 
       // 🎓 Show certificate ONLY for rank 1–3 AND current student
-      if (
-        row.rank <= 3 &&
-        row.studentId === currentStudentId
-      ) {
+      if (row.rank <= 3 && row.studentId === currentStudentId) {
         certificateCell = `
           <button class="btn outline"
             onclick="downloadCertificate('${testId}')">
@@ -79,8 +77,8 @@ async function loadLeaderboard() {
       tbody.appendChild(tr);
     });
 
-    // 🎬 Keep your animation
-    const rows = document.querySelectorAll(".leaderboard-row:not(.header)");
+    // 🎬 Animation
+    const rows = document.querySelectorAll(".leaderboard-row");
     rows.forEach((row, i) => {
       row.style.animationDelay = `${i * 0.08}s`;
     });
