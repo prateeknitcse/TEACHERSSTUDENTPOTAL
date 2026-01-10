@@ -1,4 +1,5 @@
-const testId = localStorage.getItem("selectedTestId");
+// 🔴 FIX: read the CORRECT key
+const testId = localStorage.getItem("testId");
 
 if (!testId) {
   location.href = "tests.html";
