@@ -18,15 +18,12 @@ tabs.forEach(tab => {
 });
 
 async function loadData() {
-  // ✅ FIX: USE CORRECT API
   const testsRes = await fetch(
     "http://localhost:5000/api/tests/student/my-tests",
     { headers: { Authorization: localStorage.getItem("token") } }
   );
 
   const data = await testsRes.json();
-
-  // ✅ FIX: merge buckets
   allTests = [...data.upcoming, ...data.live, ...data.ended];
 
   const resultRes = await fetch(
@@ -35,7 +32,9 @@ async function loadData() {
   );
 
   const results = await resultRes.json();
-  attemptedTestIds = results.map(r => r.testId);
+
+  // ✅ FIX: ensure STRING ids
+  attemptedTestIds = results.map(r => r.testId.toString());
 
   renderTests("unattempted");
 }
@@ -47,13 +46,15 @@ function renderTests(type) {
   allTests.forEach(test => {
     const start = new Date(test.startTime);
     const end = new Date(test.endTime);
-    const attempted = attemptedTestIds.includes(test._id);
+
+    // ✅ FIX: convert ObjectId → string
+    const attempted = attemptedTestIds.includes(test._id.toString());
 
     let status = null;
 
-    // 🚫 upcoming hidden
     if (now < start) return;
 
+    // ✅ ATTEMPTED ALWAYS WINS
     if (attempted) status = "attempted";
     else if (now >= start && now <= end) status = "live";
     else if (now > end) status = "unattempted";
