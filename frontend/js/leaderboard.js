@@ -22,7 +22,6 @@ backBtn.onclick = () => {
 
 async function loadLeaderboard() {
   try {
-    // ✅ FIX: correct API route
     const res = await fetch(
       `http://localhost:5000/api/tests/leaderboard/${testId}`,
       {
@@ -34,7 +33,6 @@ async function loadLeaderboard() {
 
     const data = await res.json();
 
-    // ⛔ Blocked before test end
     if (res.status === 403) {
       alert(data.msg);
       window.location.href = "dashboard.html";
@@ -47,14 +45,12 @@ async function loadLeaderboard() {
       const tr = document.createElement("tr");
       tr.className = "leaderboard-row";
 
-      // ⭐ Highlight current student
       if (row.studentId === currentStudentId) {
         tr.classList.add("me");
       }
 
       let certificateCell = "";
 
-      // 🎓 Show certificate ONLY for rank 1–3 AND current student
       if (row.rank <= 3 && row.studentId === currentStudentId) {
         certificateCell = `
           <button class="btn outline"
@@ -77,7 +73,6 @@ async function loadLeaderboard() {
       tbody.appendChild(tr);
     });
 
-    // 🎬 Animation
     const rows = document.querySelectorAll(".leaderboard-row");
     rows.forEach((row, i) => {
       row.style.animationDelay = `${i * 0.08}s`;
@@ -89,10 +84,12 @@ async function loadLeaderboard() {
   }
 }
 
-// 🎓 Certificate download
+// 🎓 Certificate download ✅ FIXED
 function downloadCertificate(testId) {
+  const token = localStorage.getItem("token");
+
   window.open(
-    `http://localhost:5000/api/certificates/${testId}`,
+    `http://localhost:5000/api/certificates/${testId}?token=${token}`,
     "_blank"
   );
 }

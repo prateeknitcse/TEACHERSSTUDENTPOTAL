@@ -3,6 +3,11 @@ const jwt = require("jsonwebtoken");
 module.exports = function (req, res, next) {
   let token = req.header("Authorization");
 
+  // ✅ SUPPORT token via query (for certificate download)
+  if (!token && req.query.token) {
+    token = req.query.token;
+  }
+
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denied" });
   }
