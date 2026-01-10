@@ -1,6 +1,6 @@
 // 🔐 Auth protection
 if (!localStorage.getItem("token")) {
-  location.href = "login.html"; // ✅ FIXED
+  location.href = "login.html";
 }
 
 const grid = document.getElementById("testsGrid");
@@ -17,18 +17,17 @@ tabs.forEach(tab => {
   };
 });
 
-
-
-
 async function loadData() {
-  const className = localStorage.getItem("className");
-
+  // ✅ FIX: USE CORRECT API
   const testsRes = await fetch(
-    `http://localhost:5000/api/tests/class/${className}`,
+    "http://localhost:5000/api/tests/student/my-tests",
     { headers: { Authorization: localStorage.getItem("token") } }
   );
 
-  allTests = await testsRes.json();
+  const data = await testsRes.json();
+
+  // ✅ FIX: merge buckets
+  allTests = [...data.upcoming, ...data.live, ...data.ended];
 
   const resultRes = await fetch(
     "http://localhost:5000/api/results/my",
@@ -42,7 +41,7 @@ async function loadData() {
 }
 
 function renderTests(type) {
-  grid.innerHTML = ""; // ✅ ensure clean render
+  grid.innerHTML = "";
   const now = new Date();
 
   allTests.forEach(test => {
@@ -52,10 +51,9 @@ function renderTests(type) {
 
     let status = null;
 
-    // 🚫 Test not started yet → hide completely
+    // 🚫 upcoming hidden
     if (now < start) return;
 
-    // ✅ Attempted overrides everything
     if (attempted) status = "attempted";
     else if (now >= start && now <= end) status = "live";
     else if (now > end) status = "unattempted";
@@ -70,13 +68,9 @@ function renderTests(type) {
     `;
 
     card.onclick = () => {
-      localStorage.setItem("testId", test._id); // ✅ unify key
-
-      if (status === "live") {
-        location.href = "test.html";
-      } else {
-        location.href = "test-details.html";
-      }
+      localStorage.setItem("testId", test._id);
+      if (status === "live") location.href = "test.html";
+      else location.href = "test-details.html";
     };
 
     grid.appendChild(card);
