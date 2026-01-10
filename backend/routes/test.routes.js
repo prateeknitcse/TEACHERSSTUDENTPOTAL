@@ -8,11 +8,12 @@ router.post("/create", auth, async (req, res) => {
   try {
     const { className, title, duration, questions } = req.body;
 
-    const startTime = new Date(req.body.startTime + ":00");
-    const endTime = new Date(req.body.endTime + ":00");
+    // ✅ FIX: safe date parsing (NO manual ":00")
+    const startTime = new Date(req.body.startTime);
+    const endTime = new Date(req.body.endTime);
 
     const test = await Test.create({
-      className,
+      className: className.trim(), // ✅ FIX
       title,
       startTime,
       endTime,
@@ -27,11 +28,10 @@ router.post("/create", auth, async (req, res) => {
   }
 });
 
-
 // 🧑‍🎓 STUDENT: GET TESTS BY STATUS
 router.get("/student/my-tests", auth, async (req, res) => {
   try {
-    const className = req.user.className;
+    const className = req.user.className.trim(); // ✅ FIX
     const now = new Date();
 
     const tests = await Test.find({ className });
