@@ -6,11 +6,10 @@ const auth = require("../middleware/auth.middleware");
 // 🧑‍🏫 ADMIN: CREATE TEST
 router.post("/create", auth, async (req, res) => {
   try {
-    const { className, title, startTime, endTime, duration, questions } = req.body;
+    const { className, title, duration, questions } = req.body;
 
-    if (!className || !title || !startTime || !endTime || !duration || !questions) {
-      return res.status(400).json({ msg: "All fields are required" });
-    }
+    const startTime = new Date(req.body.startTime + ":00");
+    const endTime = new Date(req.body.endTime + ":00");
 
     const test = await Test.create({
       className,
@@ -19,7 +18,7 @@ router.post("/create", auth, async (req, res) => {
       endTime,
       duration,
       questions,
-      createdBy: req.user.id // ✅ FIX
+      createdBy: req.user.id
     });
 
     res.json(test);
@@ -27,6 +26,7 @@ router.post("/create", auth, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // 🧑‍🎓 STUDENT: GET TESTS BY STATUS
 router.get("/student/my-tests", auth, async (req, res) => {
