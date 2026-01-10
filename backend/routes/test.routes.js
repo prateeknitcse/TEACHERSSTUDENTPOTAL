@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Test = require("../models/Test");
-const Result = require("../models/Result"); // ✅ FIX: missing import
+const Result = require("../models/Result");
 const auth = require("../middleware/auth.middleware");
 
 // 🧑‍🏫 ADMIN: CREATE TEST
@@ -18,7 +18,8 @@ router.post("/create", auth, async (req, res) => {
       startTime,
       endTime,
       duration,
-      questions
+      questions,
+      createdBy: req.user.id // ✅ FIX
     });
 
     res.json(test);
@@ -69,22 +70,18 @@ router.get("/leaderboard/:testId", auth, async (req, res) => {
   try {
     const { testId } = req.params;
 
-    // 🔍 Fetch test
     const test = await Test.findById(testId);
     if (!test) {
       return res.status(404).json({ msg: "Test not found" });
     }
 
     const now = new Date();
-
-    // ⛔ BLOCK before test end
     if (now < test.endTime) {
       return res.status(403).json({
         msg: "Leaderboard will be available after the test ends"
       });
     }
 
-    // ✅ Test ended → fetch leaderboard
     const results = await Result.find({ testId })
       .populate("studentId", "name")
       .sort({ score: -1, submittedAt: 1 });
